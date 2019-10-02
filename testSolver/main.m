@@ -2,6 +2,8 @@
 #import <Metal/Metal.h>
 #import "MetalSolver.h"
 
+const float error = 0.001;
+float answer = 0;
 
 int main()
 {
@@ -13,13 +15,19 @@ int main()
         
         [solver prepareData];
         
-        for (int i = 0; i < 10; i ++)
+        NSDate *start = [NSDate date];
+        [solver sendComputeCommand];
+        float nextAnswer = [solver getResult];
+        while (nextAnswer - answer > error)
         {
-            [solver sendComputeCommand];
-            //[adder getResult];
-            //printf("\n");
             [solver nextIteration];
+            answer = nextAnswer;
+            [solver sendComputeCommand];
+            nextAnswer = [solver getResult];
         }
+        
+        NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+        printf("\n%f\n", fabs(timeInterval));
         
         NSLog(@"Execution finished");
     }

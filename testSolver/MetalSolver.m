@@ -2,13 +2,14 @@
 #include <time.h>
 
 const float x0 = 0;
-const float xN = 4;
+const float xN = 10;
 const float yInit = 1;
 
-const unsigned long int numOfXs = 1000000;
+const unsigned long int numOfXs = 1024 * 16 * 16;
+const unsigned long int numOfThreads = 128 * 16;
+const unsigned long int numOfThreadsPerThreadgroup = 16;
 const unsigned int bufferXsSize = numOfXs * sizeof(float);
-const unsigned long int numOfGroups = 1000;
-const unsigned int bufferGroupsSize = numOfGroups * sizeof(float);
+const unsigned int bufferGroupsSize = numOfThreads * sizeof(float);
 const unsigned int bufferNumOfXsSize = sizeof(long int);
 const unsigned int bufferNumOfGroupsSize = sizeof(long int);
 const unsigned int bufferNumOfIterationSize = sizeof(int);
@@ -25,7 +26,7 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     id<MTLBuffer> _mBufferYs;
     id<MTLBuffer> _mBufferSums;
     id<MTLBuffer> _mBufferPrevIntegrals;
-    id<MTLBuffer> _mBufferNumOfGroups;
+    id<MTLBuffer> _mBufferNumOfThreads;
     id<MTLBuffer> _mBufferNumOfXs;
     id<MTLBuffer> _mBufferNumOfIteration;
 }
@@ -78,13 +79,13 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     _mBufferPrevIntegrals = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
     _mBufferSums = [_mDevice newBufferWithLength:bufferGroupsSize options:MTLResourceStorageModeShared];
     _mBufferNumOfXs = [_mDevice newBufferWithLength:bufferNumOfXsSize options:MTLResourceStorageModeShared];
-    _mBufferNumOfGroups = [_mDevice newBufferWithLength:bufferNumOfGroupsSize options:MTLResourceStorageModeShared];
+    _mBufferNumOfThreads = [_mDevice newBufferWithLength:bufferNumOfGroupsSize options:MTLResourceStorageModeShared];
     _mBufferNumOfIteration = [_mDevice newBufferWithLength:bufferNumOfIterationSize options:MTLResourceStorageModeShared];
     
     [self generateXs:_mBufferXs];
     [self generateYs:_mBufferYs];
     [self generateNumOfXs:_mBufferNumOfXs
-          generateNumOfGroups:_mBufferNumOfGroups
+          generateNumOfGroups:_mBufferNumOfThreads
           generateNumOfIteration:_mBufferNumOfIteration];
 }
 
@@ -117,7 +118,7 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     long int* numXs = bufferNumOfXs.contents;
     *numXs = numOfXs;
     long int* numGroups = bufferNumOfGroups.contents;
-    *numGroups = numOfGroups;
+    *numGroups = numOfThreads;
     int* numIteration = bufferNumOfIteration.contents;
     *numIteration = 0;
 }
@@ -155,26 +156,19 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     [computeEncoder setBuffer:_mBufferPrevIntegrals offset:0 atIndex:3];
     [computeEncoder setBuffer:_mBufferNumOfIteration offset:0 atIndex:4];
     [computeEncoder setBuffer:_mBufferNumOfXs offset:0 atIndex:5];
-    [computeEncoder setBuffer:_mBufferNumOfGroups offset:0 atIndex:6];
+    [computeEncoder setBuffer:_mBufferNumOfThreads offset:0 atIndex:6];
     
-    MTLSize gridSize = MTLSizeMake(numOfGroups, 1, 1);
-    
-    NSUInteger threadGroupSize = 1;
-
-    MTLSize threadgroupSize = MTLSizeMake(threadGroupSize, 1, 1);
-    
-    [computeEncoder dispatchThreads:gridSize
-              threadsPerThreadgroup:threadgroupSize];
+    MTLSize threadsPerThreadgroup = MTLSizeMake(numOfThreadsPerThreadgroup, 1, 1);
+    MTLSize threadsPerGrid = MTLSizeMake(numOfThreads, 1, 1);
+    [computeEncoder dispatchThreads: threadsPerGrid
+                     threadsPerThreadgroup: threadsPerThreadgroup];
 }
 
--(float*) getResult
+-(float) getResult
 {
     float* yCheck = _mBufferYs.contents;
-    for (int i = 0; i < numOfXs; i ++)
-    {
-        printf("%f\n",yCheck[i]);
-    }
-    return _mBufferYs.contents;
+    printf("%f\n",yCheck[numOfXs - 1]);
+    return yCheck[numOfXs - 1];
 }
 
 @end
