@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3356F9B0238C591F00E78262 /* PicardsIterativeSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 3356F9AF238C591F00E78262 /* PicardsIterativeSolver.m */; };
 		33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */; };
-		33FFB3D1233D693400C10CC5 /* PicardsMetalSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */; };
+		33FFB3D1233D693400C10CC5 /* PicardsParallelSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */; };
 		33FFB3D4233D696600C10CC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3D3233D696600C10CC5 /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -26,10 +27,12 @@
 
 /* Begin PBXFileReference section */
 		3356F9A9238C2D9300E78262 /* rightSide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rightSide.h; sourceTree = "<group>"; };
+		3356F9AF238C591F00E78262 /* PicardsIterativeSolver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PicardsIterativeSolver.m; sourceTree = "<group>"; };
+		3356F9B1238C595300E78262 /* PicardsIterativeSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PicardsIterativeSolver.h; sourceTree = "<group>"; };
 		33FFB3C2233D691100C10CC5 /* ParallelPicardsODESolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ParallelPicardsODESolver; sourceTree = BUILT_PRODUCTS_DIR; };
-		33FFB3CC233D693400C10CC5 /* PicardsMetalSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicardsMetalSolver.h; sourceTree = "<group>"; };
+		33FFB3CC233D693400C10CC5 /* PicardsParallelSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicardsParallelSolver.h; sourceTree = "<group>"; };
 		33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PicardsMethod.metal; sourceTree = "<group>"; };
-		33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicardsMetalSolver.m; sourceTree = "<group>"; };
+		33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicardsParallelSolver.m; sourceTree = "<group>"; };
 		33FFB3D3233D696600C10CC5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,9 +67,11 @@
 			isa = PBXGroup;
 			children = (
 				33FFB3D3233D696600C10CC5 /* main.m */,
-				33FFB3CC233D693400C10CC5 /* PicardsMetalSolver.h */,
-				33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */,
+				33FFB3CC233D693400C10CC5 /* PicardsParallelSolver.h */,
+				33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */,
 				33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */,
+				3356F9B1238C595300E78262 /* PicardsIterativeSolver.h */,
+				3356F9AF238C591F00E78262 /* PicardsIterativeSolver.m */,
 				3356F9A9238C2D9300E78262 /* rightSide.h */,
 			);
 			path = PicardsMethod;
@@ -129,8 +134,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */,
+				3356F9B0238C591F00E78262 /* PicardsIterativeSolver.m in Sources */,
 				33FFB3D4233D696600C10CC5 /* main.m in Sources */,
-				33FFB3D1233D693400C10CC5 /* PicardsMetalSolver.m in Sources */,
+				33FFB3D1233D693400C10CC5 /* PicardsParallelSolver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,4 +1,4 @@
-#import "PicardsMetalSolver.h"
+#import "PicardsParallelSolver.h"
 #include <time.h>
 
 float x0;
@@ -172,20 +172,37 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
 -(float*) getResult
 {
     float* yCheck = _mBufferYs.contents;
-    printf("%f\n",yCheck[numOfXs - 1]);
     return yCheck;
 }
-
 @end
+
+
+float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
+{
+    float maxDifference = FLT_MIN;
+    
+    for (int i = 0; i < numX; i ++)
+    {
+        float diff = fabsf(nextAnswer[i] - answer[i]);
+        if (diff > maxDifference)
+            maxDifference = diff;
+    }
+    
+    return maxDifference;
+}
 
 float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
 {
-    const float error = 0.001;
-    float answer = FLT_MAX;
+    const float error = 0.0001;
+    float* answer = (float*)malloc(numX * sizeof(int));
+    for (int i = 0; i < numX; i++)
+        answer[i] = FLT_MAX;
+    
     
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
     
     PicardsMetalSolver* solver = [[PicardsMetalSolver alloc] initWithDevice:device];
+    
     
     [solver setX0: x0
             setXN: xN
@@ -193,19 +210,26 @@ float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
             setNumOfX: numX];
     
     NSDate *start = [NSDate date];
+    
     [solver sendComputeCommand];
     float* nextAnswer = [solver getResult];
     
-    while (fabsf(nextAnswer[numOfXs - 1] - answer) > error)
+    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+    
+    while (getMaxDifference(answer, nextAnswer, numX) > error)
     {
+        for (int i = 0; i < numX; i ++)
+            answer[i] = nextAnswer[i];
+        
+        NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+        
         [solver nextIteration];
-        answer = nextAnswer[numOfXs - 1];
         [solver sendComputeCommand];
         nextAnswer = [solver getResult];
+        
+        timeInterval += [start timeIntervalSinceNow];
     }
     
-    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
-    printf("\n%f\n", fabs(timeInterval));
-    
+    printf("Parallel method time:\n%f\n", fabs(timeInterval));
     return nextAnswer;
 }
