@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33FFB3D0233D693400C10CC5 /* solver.metal in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CD233D693400C10CC5 /* solver.metal */; };
-		33FFB3D1233D693400C10CC5 /* MetalSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CE233D693400C10CC5 /* MetalSolver.m */; };
+		33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */; };
+		33FFB3D1233D693400C10CC5 /* PicardsMetalSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */; };
 		33FFB3D4233D696600C10CC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3D3233D696600C10CC5 /* main.m */; };
 /* End PBXBuildFile section */
 
@@ -25,10 +25,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		33FFB3C2233D691100C10CC5 /* testSolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testSolver; sourceTree = BUILT_PRODUCTS_DIR; };
-		33FFB3CC233D693400C10CC5 /* MetalSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetalSolver.h; sourceTree = "<group>"; };
-		33FFB3CD233D693400C10CC5 /* solver.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = solver.metal; sourceTree = "<group>"; };
-		33FFB3CE233D693400C10CC5 /* MetalSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MetalSolver.m; sourceTree = "<group>"; };
+		3356F9A9238C2D9300E78262 /* rightSide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rightSide.h; sourceTree = "<group>"; };
+		33FFB3C2233D691100C10CC5 /* ParallelPicardsODESolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ParallelPicardsODESolver; sourceTree = BUILT_PRODUCTS_DIR; };
+		33FFB3CC233D693400C10CC5 /* PicardsMetalSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicardsMetalSolver.h; sourceTree = "<group>"; };
+		33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PicardsMethod.metal; sourceTree = "<group>"; };
+		33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicardsMetalSolver.m; sourceTree = "<group>"; };
 		33FFB3D3233D696600C10CC5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -46,7 +47,7 @@
 		33FFB3B9233D691100C10CC5 = {
 			isa = PBXGroup;
 			children = (
-				33FFB3C4233D691100C10CC5 /* testSolver */,
+				33FFB3C4233D691100C10CC5 /* PicardsMethod */,
 				33FFB3C3233D691100C10CC5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,28 +55,29 @@
 		33FFB3C3233D691100C10CC5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33FFB3C2233D691100C10CC5 /* testSolver */,
+				33FFB3C2233D691100C10CC5 /* ParallelPicardsODESolver */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		33FFB3C4233D691100C10CC5 /* testSolver */ = {
+		33FFB3C4233D691100C10CC5 /* PicardsMethod */ = {
 			isa = PBXGroup;
 			children = (
 				33FFB3D3233D696600C10CC5 /* main.m */,
-				33FFB3CC233D693400C10CC5 /* MetalSolver.h */,
-				33FFB3CE233D693400C10CC5 /* MetalSolver.m */,
-				33FFB3CD233D693400C10CC5 /* solver.metal */,
+				33FFB3CC233D693400C10CC5 /* PicardsMetalSolver.h */,
+				33FFB3CE233D693400C10CC5 /* PicardsMetalSolver.m */,
+				33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */,
+				3356F9A9238C2D9300E78262 /* rightSide.h */,
 			);
-			path = testSolver;
+			path = PicardsMethod;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		33FFB3C1233D691100C10CC5 /* testSolver */ = {
+		33FFB3C1233D691100C10CC5 /* ParallelPicardsODESolver */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "testSolver" */;
+			buildConfigurationList = 33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "ParallelPicardsODESolver" */;
 			buildPhases = (
 				33FFB3BE233D691100C10CC5 /* Sources */,
 				33FFB3BF233D691100C10CC5 /* Frameworks */,
@@ -85,9 +87,9 @@
 			);
 			dependencies = (
 			);
-			name = testSolver;
+			name = ParallelPicardsODESolver;
 			productName = testSolver;
-			productReference = 33FFB3C2233D691100C10CC5 /* testSolver */;
+			productReference = 33FFB3C2233D691100C10CC5 /* ParallelPicardsODESolver */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -104,7 +106,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "testSolver" */;
+			buildConfigurationList = 33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "ParallelPicardsODESolver" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -116,7 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				33FFB3C1233D691100C10CC5 /* testSolver */,
+				33FFB3C1233D691100C10CC5 /* ParallelPicardsODESolver */,
 			);
 		};
 /* End PBXProject section */
@@ -126,9 +128,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33FFB3D0233D693400C10CC5 /* solver.metal in Sources */,
+				33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */,
 				33FFB3D4233D696600C10CC5 /* main.m in Sources */,
-				33FFB3D1233D693400C10CC5 /* MetalSolver.m in Sources */,
+				33FFB3D1233D693400C10CC5 /* PicardsMetalSolver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +267,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "testSolver" */ = {
+		33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "ParallelPicardsODESolver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				33FFB3C7233D691100C10CC5 /* Debug */,
@@ -274,7 +276,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "testSolver" */ = {
+		33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "ParallelPicardsODESolver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				33FFB3CA233D691100C10CC5 /* Debug */,

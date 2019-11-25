@@ -1,20 +1,20 @@
-#import "MetalSolver.h"
+#import "PicardsMetalSolver.h"
 #include <time.h>
 
-const float x0 = 0;
-const float xN = 10;
-const float yInit = 1;
+float x0;
+float xN;
+float yInit;
 
-const unsigned long int numOfXs = 1024 * 16 * 16;
-const unsigned long int numOfThreads = 128 * 16;
-const unsigned long int numOfThreadsPerThreadgroup = 16;
-const unsigned int bufferXsSize = numOfXs * sizeof(float);
+unsigned long numOfXs;
+unsigned long bufferXsSize;
+const unsigned long numOfThreads = 128 * 16;
+const unsigned long numOfThreadsPerThreadgroup = 16;
 const unsigned int bufferGroupsSize = numOfThreads * sizeof(float);
 const unsigned int bufferNumOfXsSize = sizeof(long int);
 const unsigned int bufferNumOfGroupsSize = sizeof(long int);
 const unsigned int bufferNumOfIterationSize = sizeof(int);
 
-@implementation MetalSolver
+@implementation PicardsMetalSolver
 {
     id<MTLDevice> _mDevice;
     
@@ -47,7 +47,7 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
             return nil;
         }
 
-        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solve_boundary_task"];
+        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solveBoundaryTask"];
         if (solveFunction == nil)
         {
             NSLog(@"Failed to find the adder function.");
@@ -72,8 +72,17 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     return self;
 }
 
-- (void) prepareData
+- (void) setX0: (float) initX0
+         setXN: (float) initXN
+         setY0: (float) initY0
+         setNumOfX:(unsigned long int) initNumX
 {
+    x0 = initX0;
+    xN = initXN;
+    yInit = initY0;
+    numOfXs = initNumX;
+    bufferXsSize = numOfXs * sizeof(float);
+    
     _mBufferXs = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
     _mBufferYs = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
     _mBufferPrevIntegrals = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
@@ -88,7 +97,6 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
           generateNumOfGroups:_mBufferNumOfThreads
           generateNumOfIteration:_mBufferNumOfIteration];
 }
-
 
 - (void) generateXs: (id<MTLBuffer>) buffer
 {
@@ -129,7 +137,6 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     *numIteration += 1;
 }
 
-
 - (void) sendComputeCommand
 {
     id<MTLCommandBuffer> commandBuffer = [_mCommandQueue commandBuffer];
@@ -138,16 +145,14 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     id<MTLComputeCommandEncoder> computeEncoder = [commandBuffer computeCommandEncoder];
     assert(computeEncoder != nil);
     
-    [self encodeAddCommand:computeEncoder];
+    [self encodeSolveCommand:computeEncoder];
     
     [computeEncoder endEncoding];
     [commandBuffer commit];
     [commandBuffer waitUntilCompleted];
-    
-
 }
 
-- (void)encodeAddCommand:(id<MTLComputeCommandEncoder>)computeEncoder {
+- (void)encodeSolveCommand:(id<MTLComputeCommandEncoder>)computeEncoder {
     
     [computeEncoder setComputePipelineState:_mSolveFunctionPSO];
     [computeEncoder setBuffer:_mBufferXs offset:0 atIndex:0];
@@ -164,11 +169,43 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
                      threadsPerThreadgroup: threadsPerThreadgroup];
 }
 
--(float) getResult
+-(float*) getResult
 {
     float* yCheck = _mBufferYs.contents;
     printf("%f\n",yCheck[numOfXs - 1]);
-    return yCheck[numOfXs - 1];
+    return yCheck;
 }
 
 @end
+
+float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
+{
+    const float error = 0.001;
+    float answer = FLT_MAX;
+    
+    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+    
+    PicardsMetalSolver* solver = [[PicardsMetalSolver alloc] initWithDevice:device];
+    
+    [solver setX0: x0
+            setXN: xN
+            setY0: y0
+            setNumOfX: numX];
+    
+    NSDate *start = [NSDate date];
+    [solver sendComputeCommand];
+    float* nextAnswer = [solver getResult];
+    
+    while (fabsf(nextAnswer[numOfXs - 1] - answer) > error)
+    {
+        [solver nextIteration];
+        answer = nextAnswer[numOfXs - 1];
+        [solver sendComputeCommand];
+        nextAnswer = [solver getResult];
+    }
+    
+    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+    printf("\n%f\n", fabs(timeInterval));
+    
+    return nextAnswer;
+}

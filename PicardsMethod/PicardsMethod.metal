@@ -1,13 +1,7 @@
 #include <metal_stdlib>
+#import "rightSide.h"
+
 using namespace metal;
-
-float f(float x, float y)
-{
-    return 2 * x * y / (1 + x * x);
-}
-
-// y = 1 + x ^ 2
-
 
 float findIntegral(int i, device const float* x, device float* y)
 {
@@ -42,7 +36,7 @@ float getSums(device float* sums, uint numOfCurrentThread)
     return sum;
 }
 
-kernel void solve_boundary_task(device const float* x,
+kernel void solveBoundaryTask(device const float* x,
                                 device float* y,
                                 device float* sums,
                                 device float* prevIntegrals,
