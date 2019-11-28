@@ -210,26 +210,26 @@ float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
             setNumOfX: numX];
     
     NSDate *start = [NSDate date];
-    
+    NSTimeInterval sumTime = 0;
     [solver sendComputeCommand];
     float* nextAnswer = [solver getResult];
     
-    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+    sumTime += [start timeIntervalSinceNow];
     
     while (getMaxDifference(answer, nextAnswer, numX) > error)
     {
         for (int i = 0; i < numX; i ++)
             answer[i] = nextAnswer[i];
         
-        NSTimeInterval timeInterval = [start timeIntervalSinceNow];
+        NSDate *start = [NSDate date];
         
         [solver nextIteration];
         [solver sendComputeCommand];
         nextAnswer = [solver getResult];
         
-        timeInterval += [start timeIntervalSinceNow];
+        sumTime += [start timeIntervalSinceNow];
     }
     
-    printf("Parallel method time:\n%f\n", fabs(timeInterval));
+    printf("Parallel method time:\n%f\n", fabs(sumTime));
     return nextAnswer;
 }

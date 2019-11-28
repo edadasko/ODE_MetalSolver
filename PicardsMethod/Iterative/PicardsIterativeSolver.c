@@ -34,6 +34,7 @@ float* iterativePicardsMethod(float x0, float xN, float y0, unsigned long numX)
     const float error = 0.0001;
     
     float* answer = (float*)malloc(numX * sizeof(int));
+    float* nextAnswer = (float*)malloc(numX * sizeof(int));
     float* xs = (float*)malloc(numX * sizeof(int));
     float* ys = (float*)malloc(numX * sizeof(int));
     
@@ -47,23 +48,24 @@ float* iterativePicardsMethod(float x0, float xN, float y0, unsigned long numX)
     
     for (unsigned long index = 0; index < numX; index++)
     {
+        nextAnswer[index] = y0;
         ys[index] = y0;
     }
     
-    NSDate *start = [NSDate date];
-    float* nextAnswer = picardsIteration(xs, ys, y0, numX);
-    NSTimeInterval timeInterval = [start timeIntervalSinceNow];
-    
-    while (getMaxDiff(answer, nextAnswer, numX) > error)
+    clock_t t, sumT = 0;
+    do
     {
         for (int i = 0; i < numX; i ++)
             answer[i] = nextAnswer[i];
         
-        start = [NSDate date];
+        t = clock();
         nextAnswer = picardsIteration(xs, nextAnswer, y0, numX);
-        timeInterval += [start timeIntervalSinceNow];
+        t = clock() - t;
+        sumT += t;
     }
+    while (getMaxDiff(answer, nextAnswer, numX) > error);
     
-    printf("Iterative method time:\n%f\n", fabs(timeInterval));
+    double time_taken = ((double)sumT)/CLOCKS_PER_SEC;
+    printf("Iterative method time:\n%f\n", time_taken);
     return nextAnswer;
 }
