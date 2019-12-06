@@ -3,7 +3,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-float* parallelPicardsMethod(float, float, float, unsigned long);
+float* parallelPicardsMethod(float, float, float, unsigned long, double*);
 
 @interface PicardsMetalSolver : NSObject
 - (instancetype) initWithDevice: (id<MTLDevice>) device;

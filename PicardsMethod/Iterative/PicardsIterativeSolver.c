@@ -29,7 +29,8 @@ float* picardsIteration(float* xs, float* ys, float y0, unsigned long numX)
     return answer;
 }
 
-float* iterativePicardsMethod(float x0, float xN, float y0, unsigned long numX)
+float* iterativePicardsMethod(float x0, float xN, float y0,
+                              unsigned long numX, double* time)
 {
     const float error = 0.0001;
     
@@ -66,6 +67,6 @@ float* iterativePicardsMethod(float x0, float xN, float y0, unsigned long numX)
     while (getMaxDiff(answer, nextAnswer, numX) > error);
     
     double time_taken = ((double)sumT)/CLOCKS_PER_SEC;
-    printf("Iterative method time:\n%f\n", time_taken);
+    *time += time_taken;
     return nextAnswer;
 }

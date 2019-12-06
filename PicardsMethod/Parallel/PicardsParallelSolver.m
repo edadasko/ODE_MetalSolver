@@ -7,8 +7,8 @@ float yInit;
 
 unsigned long numOfXs;
 unsigned long bufferXsSize;
-const unsigned long numOfThreads = 128 * 16;
-const unsigned long numOfThreadsPerThreadgroup = 16;
+const unsigned long numOfThreads = 1024;
+const unsigned long numOfThreadsPerThreadgroup = 32;
 const unsigned int bufferGroupsSize = numOfThreads * sizeof(float);
 const unsigned int bufferNumOfXsSize = sizeof(long int);
 const unsigned int bufferNumOfGroupsSize = sizeof(long int);
@@ -191,7 +191,7 @@ float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
     return maxDifference;
 }
 
-float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
+float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX, double* time)
 {
     const float error = 0.0001;
     float* answer = (float*)malloc(numX * sizeof(int));
@@ -230,6 +230,7 @@ float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX)
         sumTime += [start timeIntervalSinceNow];
     }
     
-    printf("Parallel method time:\n%f\n", fabs(sumTime));
+    *time += (double)fabs(sumTime);
+    
     return nextAnswer;
 }
