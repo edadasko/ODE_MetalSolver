@@ -1,14 +1,14 @@
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#import "Parallel/PicardsParallelSolver.h"
-#import "Iterative/PicardsIterativeSolver.h"
+#import "PicardsMethod/Parallel/PicardsParallelSolver.h"
+#import "PicardsMethod/Iterative/PicardsIterativeSolver.h"
 
 int main()
 {
-    const int numOfEquations = 50;
+    const int numOfEquations = 1;
     const int x0 = 1;
-    const int xN = 10000;
-    const int y0 = -1;
+    const int xN = 100;
+    const int y0 = 0;
     const int numX =  1024 * 1024;
     
     double parallelTime = 0;

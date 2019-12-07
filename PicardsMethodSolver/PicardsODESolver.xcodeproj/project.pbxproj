@@ -1,0 +1,313 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3356F9B0238C591F00E78262 /* PicardsIterativeSolver.c in Sources */ = {isa = PBXBuildFile; fileRef = 3356F9AF238C591F00E78262 /* PicardsIterativeSolver.c */; };
+		33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */; };
+		33FFB3D1233D693400C10CC5 /* PicardsParallelSolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */; };
+		33FFB3D4233D696600C10CC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 33FFB3D3233D696600C10CC5 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		33FFB3C0233D691100C10CC5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3356F9A9238C2D9300E78262 /* rightSide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rightSide.h; sourceTree = "<group>"; };
+		3356F9AF238C591F00E78262 /* PicardsIterativeSolver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PicardsIterativeSolver.c; sourceTree = "<group>"; };
+		3356F9B1238C595300E78262 /* PicardsIterativeSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PicardsIterativeSolver.h; sourceTree = "<group>"; };
+		33FFB3C2233D691100C10CC5 /* PicardsODESolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PicardsODESolver; sourceTree = BUILT_PRODUCTS_DIR; };
+		33FFB3CC233D693400C10CC5 /* PicardsParallelSolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PicardsParallelSolver.h; sourceTree = "<group>"; };
+		33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = PicardsMethod.metal; sourceTree = "<group>"; };
+		33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PicardsParallelSolver.m; sourceTree = "<group>"; };
+		33FFB3D3233D696600C10CC5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		33FFB3BF233D691100C10CC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		33089A17238FC051003F138B /* Parallel */ = {
+			isa = PBXGroup;
+			children = (
+				3356F9A9238C2D9300E78262 /* rightSide.h */,
+				33FFB3CD233D693400C10CC5 /* PicardsMethod.metal */,
+				33FFB3CE233D693400C10CC5 /* PicardsParallelSolver.m */,
+				33FFB3CC233D693400C10CC5 /* PicardsParallelSolver.h */,
+			);
+			path = Parallel;
+			sourceTree = "<group>";
+		};
+		33089A18238FC195003F138B /* Iterative */ = {
+			isa = PBXGroup;
+			children = (
+				3356F9B1238C595300E78262 /* PicardsIterativeSolver.h */,
+				3356F9AF238C591F00E78262 /* PicardsIterativeSolver.c */,
+			);
+			path = Iterative;
+			sourceTree = "<group>";
+		};
+		33FFB3B9233D691100C10CC5 = {
+			isa = PBXGroup;
+			children = (
+				33FFB3D3233D696600C10CC5 /* main.m */,
+				33FFB3C4233D691100C10CC5 /* PicardsMethod */,
+				33FFB3C3233D691100C10CC5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		33FFB3C3233D691100C10CC5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				33FFB3C2233D691100C10CC5 /* PicardsODESolver */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		33FFB3C4233D691100C10CC5 /* PicardsMethod */ = {
+			isa = PBXGroup;
+			children = (
+				33089A18238FC195003F138B /* Iterative */,
+				33089A17238FC051003F138B /* Parallel */,
+			);
+			path = PicardsMethod;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		33FFB3C1233D691100C10CC5 /* PicardsODESolver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "PicardsODESolver" */;
+			buildPhases = (
+				33FFB3BE233D691100C10CC5 /* Sources */,
+				33FFB3BF233D691100C10CC5 /* Frameworks */,
+				33FFB3C0233D691100C10CC5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PicardsODESolver;
+			productName = testSolver;
+			productReference = 33FFB3C2233D691100C10CC5 /* PicardsODESolver */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		33FFB3BA233D691100C10CC5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = "Eduard Adasko";
+				TargetAttributes = {
+					33FFB3C1233D691100C10CC5 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "PicardsODESolver" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 33FFB3B9233D691100C10CC5;
+			productRefGroup = 33FFB3C3233D691100C10CC5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				33FFB3C1233D691100C10CC5 /* PicardsODESolver */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		33FFB3BE233D691100C10CC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33FFB3D0233D693400C10CC5 /* PicardsMethod.metal in Sources */,
+				3356F9B0238C591F00E78262 /* PicardsIterativeSolver.c in Sources */,
+				33FFB3D4233D696600C10CC5 /* main.m in Sources */,
+				33FFB3D1233D693400C10CC5 /* PicardsParallelSolver.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		33FFB3C7233D691100C10CC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		33FFB3C8233D691100C10CC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		33FFB3CA233D691100C10CC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		33FFB3CB233D691100C10CC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		33FFB3BD233D691100C10CC5 /* Build configuration list for PBXProject "PicardsODESolver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33FFB3C7233D691100C10CC5 /* Debug */,
+				33FFB3C8233D691100C10CC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		33FFB3C9233D691100C10CC5 /* Build configuration list for PBXNativeTarget "PicardsODESolver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33FFB3CA233D691100C10CC5 /* Debug */,
+				33FFB3CB233D691100C10CC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 33FFB3BA233D691100C10CC5 /* Project object */;
+}
