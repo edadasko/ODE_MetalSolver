@@ -3,20 +3,20 @@
 
 using namespace metal;
 
-kernel void solveBoundaryTask(device const float* x,
-                              device float* y,
-                              device float* coarseGridValues,
-                              device const int* numOfIteration,
-                              device const int* numOfX,
-                              device const float* dt,
-                              device const float* coeff,
-                              device const int* numOfThreads,
-                              uint numOfCurrentThread [[thread_position_in_grid]])
+kernel void solveODE(device const float* x,
+                     device float* y,
+                     device float* coarseGridValues,
+                     device const int* numOfIteration,
+                     device const int* numOfX,
+                     device const float* dt,
+                     device const float* coeff,
+                     device const int* numOfThreads,
+                     uint numOfCurrentThread [[thread_position_in_grid]])
 {
     int startIndex = numOfCurrentThread * (*numOfX - 1) / *numOfThreads;
     
-    y[startIndex + 1] =
-        (*dt * f(x[startIndex + 1]) + coarseGridValues[numOfCurrentThread]) / (1 - *coeff * *dt);
+    y[startIndex + 1] = (*dt * f(x[startIndex + 1]) +
+                         coarseGridValues[numOfCurrentThread]) / (1 - *coeff * *dt);
     
     for (uint i = startIndex + 2;
          i < (numOfCurrentThread + 1) * (*numOfX - 1) / *numOfThreads + 1;

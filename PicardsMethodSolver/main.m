@@ -5,7 +5,7 @@
 
 int main()
 {
-    const int numOfEquations = 1;
+    const int numOfEquations = 10;
     const int x0 = 1;
     const int xN = 100;
     const int y0 = 0;

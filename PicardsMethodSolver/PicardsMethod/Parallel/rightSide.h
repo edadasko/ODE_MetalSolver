@@ -1,5 +1,4 @@
 float f(float x, float y)
 {
-    // y = 1 + x ^ 2
-    return 1 / x;
+    return 0.01 * y + 1 / x;
 }

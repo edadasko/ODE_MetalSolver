@@ -11,6 +11,7 @@ unsigned long numOfXs;
 unsigned long bufferXsSize;
 const unsigned long numOfThreads = 1024;
 const unsigned long numOfThreadsPerThreadgroup = 32;
+
 const unsigned int bufferGroupsSize = numOfThreads * sizeof(float);
 const unsigned int bufferCoarseYsSize = (numOfThreads + 1) * sizeof(float);
 const unsigned int bufferNumOfXsSize = sizeof(long int);
@@ -43,36 +44,11 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     if (self)
     {
         _mDevice = device;
-        
         NSError* error = nil;
-        
         id<MTLLibrary> defaultLibrary = [_mDevice newDefaultLibrary];
-        if (defaultLibrary == nil)
-        {
-            NSLog(@"Failed to find the default library.");
-            return nil;
-        }
-        
-        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solveBoundaryTask"];
-        if (solveFunction == nil)
-        {
-            NSLog(@"Failed to find the adder function.");
-            return nil;
-        }
-        
+        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solveODE"];
         _mSolveFunctionPSO = [_mDevice newComputePipelineStateWithFunction: solveFunction error:&error];
-        if (_mSolveFunctionPSO == nil)
-        {
-            NSLog(@"Failed to created pipeline state object, error %@.", error);
-            return nil;
-        }
-        
         _mCommandQueue = [_mDevice newCommandQueue];
-        if (_mCommandQueue == nil)
-        {
-            NSLog(@"Failed to find the command queue.");
-            return nil;
-        }
     }
     
     return self;
@@ -118,12 +94,15 @@ void generateXs(id<MTLBuffer> bufferXs, id<MTLBuffer> bufferDT)
 {
     float* dataPtr = bufferXs.contents;
     float h = (xN - x0) / (numOfXs - 1);
+    
     dataPtr[0] = x0;
     dataPtr[numOfXs - 1] = xN;
+    
     for (unsigned long index = 1; index < numOfXs - 1; index++)
     {
         dataPtr[index] = dataPtr[index - 1] + h;
     }
+    
     float* dt = bufferDT.contents;
     *dt = h;
 }
@@ -131,6 +110,7 @@ void generateXs(id<MTLBuffer> bufferXs, id<MTLBuffer> bufferDT)
 void generateYs(id<MTLBuffer> buffer)
 {
     float* dataPtr = buffer.contents;
+    
     for (unsigned long index = 0; index < numOfXs; index++)
     {
         dataPtr[index] = yInit;
@@ -142,10 +122,13 @@ void generateNums(id<MTLBuffer> bufferNumOfXs, id<MTLBuffer> bufferNumOfGroups,
 {
     long int* numXs = bufferNumOfXs.contents;
     *numXs = numOfXs;
+    
     long int* numGroups = bufferNumOfGroups.contents;
     *numGroups = numOfThreads;
+    
     int* numIteration = bufferNumOfIteration.contents;
     *numIteration = 0;
+    
     float* coeff = bufferCoeff.contents;
     *coeff = coefficient;
 }
@@ -158,11 +141,11 @@ void generateCoarseValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferXs)
     
     float dT = (xN - x0) / (numOfThreads - 1);
     float* xs = bufferXs.contents;
+    
     for (int i = 1; i < numOfThreads + 1; i++)
     {
         coarseGridValues[i] = (dT * f(xs[i * (numOfXs - 1) /  numOfThreads])
                                + coarseGridValues[i - 1]) / (1 - coefficient * dT);
-        //printf("%f\n", coarseGridValues[i]);
     }
 }
 
@@ -178,7 +161,6 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs)
     for (int i = 0; i < numOfThreads + 1; i++)
     {
         defect[i] = ys[i * (numOfXs - 1) /  numOfThreads] - coarseGridValues[i];
-        //printf("%f\n", defect[i]);
     }
     
     float* deltas = (float*)malloc((numOfThreads + 1) * sizeof(float));
@@ -188,13 +170,11 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs)
     for (int i = 1; i < numOfThreads + 1; i++)
     {
         deltas[i] = (defect[i - 1] + deltas[i - 1]) / (1 - coefficient * dT);
-        //printf("%f\n", deltas[i]);
     }
     
     for (int i = 0; i < numOfThreads + 1; i++)
     {
         coarseGridValues[i] = ys[i * (numOfXs - 1) /  numOfThreads] + deltas[i];
-        //printf("%f\n", coarseGridValues[i]);
     }
     
     free (defect);
@@ -245,6 +225,7 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs)
     float* yCheck = _mBufferYs.contents;
     return yCheck;
 }
+
 @end
 
 
@@ -255,7 +236,8 @@ float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
     for (int i = 0; i < numOfThreads; i ++)
     {
         float diff = fabsf(nextAnswer[i * (numOfXs - 1) /  numOfThreads] -
-                           answer[i * (numOfXs - 1) /  numOfThreads]);
+                        answer[i * (numOfXs - 1) /  numOfThreads]);
+        
         if (diff > maxDifference)
             maxDifference = diff;
     }
@@ -264,12 +246,17 @@ float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
 }
 
 
-float* pararealMethod(float x0, float xN, float y0, float coeff, unsigned long numX, double* time)
+float* pararealMethod(float x0, float xN, float y0,
+                      float coeff, unsigned long numX,
+                      double* time)
 {
-    const float error = 0.001;
+    const float error = 0.0001;
     float* answer = (float*)malloc(numX * sizeof(int));
+    
     for (int i = 0; i < numX; i++)
+    {
         answer[i] = FLT_MAX;
+    }
     
     coefficient = coeff;
     

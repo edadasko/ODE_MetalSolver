@@ -41,32 +41,13 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
         NSError* error = nil;
 
         id<MTLLibrary> defaultLibrary = [_mDevice newDefaultLibrary];
-        if (defaultLibrary == nil)
-        {
-            NSLog(@"Failed to find the default library.");
-            return nil;
-        }
 
-        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solveBoundaryTask"];
-        if (solveFunction == nil)
-        {
-            NSLog(@"Failed to find the adder function.");
-            return nil;
-        }
+        id<MTLFunction> solveFunction = [defaultLibrary newFunctionWithName:@"solveODE"];
         
-        _mSolveFunctionPSO = [_mDevice newComputePipelineStateWithFunction: solveFunction error:&error];
-        if (_mSolveFunctionPSO == nil)
-        {
-            NSLog(@"Failed to created pipeline state object, error %@.", error);
-            return nil;
-        }
+        _mSolveFunctionPSO = [_mDevice newComputePipelineStateWithFunction:
+                              solveFunction error:&error];
         
         _mCommandQueue = [_mDevice newCommandQueue];
-        if (_mCommandQueue == nil)
-        {
-            NSLog(@"Failed to find the command queue.");
-            return nil;
-        }
     }
     
     return self;
@@ -100,8 +81,10 @@ void generateXs(id<MTLBuffer> buffer)
 {
     float* dataPtr = buffer.contents;
     float h = (xN - x0) / (numOfXs - 1);
+    
     dataPtr[0] = x0;
     dataPtr[numOfXs - 1] = xN;
+    
     for (unsigned long index = 1; index < numOfXs - 1; index++)
     {
         dataPtr[index] = dataPtr[index - 1] + h;
@@ -171,8 +154,8 @@ void generateNums(id<MTLBuffer> bufferNumOfXs, id<MTLBuffer> bufferNumOfGroups,
     float* yCheck = _mBufferYs.contents;
     return yCheck;
 }
-@end
 
+@end
 
 float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
 {
@@ -192,14 +175,15 @@ float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX, d
 {
     const float error = 0.0001;
     float* answer = (float*)malloc(numX * sizeof(int));
-    for (int i = 0; i < numX; i++)
-        answer[i] = FLT_MAX;
     
+    for (int i = 0; i < numX; i++)
+    {
+        answer[i] = FLT_MAX;
+    }
     
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
     
     PicardsMetalSolver* solver = [[PicardsMetalSolver alloc] initWithDevice:device];
-    
     
     [solver setX0: x0
             setXN: xN
