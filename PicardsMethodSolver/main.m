@@ -3,8 +3,7 @@
 #import "PicardsMethod/Parallel/PicardsParallelSolver.h"
 #import "PicardsMethod/Iterative/PicardsIterativeSolver.h"
 
-int main()
-{
+int main() {
     const int numOfEquations = 1;
     const int x0 = 0;
     const int xN = 10;
@@ -26,9 +25,6 @@ int main()
     
     printf("Iterative time: %f \n", iterativeTime);
     printf("y[xN] = %f\n", iterativeAnswer[numX - 1]);
-    
-    //for (int i = 0; i < numX; i++)
-    //   printf("%f\n", fabs(parallelAnswer[i] - iterativeAnswer[i]));
     
     return 0;
 }

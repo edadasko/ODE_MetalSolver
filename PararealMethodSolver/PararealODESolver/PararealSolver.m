@@ -18,8 +18,7 @@ const unsigned int bufferDTSize = sizeof(float);
 const unsigned int bufferNumOfGroupsSize = sizeof(long int);
 const unsigned int bufferNumOfIterationSize = sizeof(int);
 
-@implementation PararealSolver
-{
+@implementation PararealSolver {
     id<MTLDevice> _mDevice;
     
     id<MTLComputePipelineState> _mSolveFunctionPSO;
@@ -35,11 +34,9 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     id<MTLBuffer> _mBufferNumOfIteration;
 }
 
-- (instancetype) initWithDevice: (id<MTLDevice>) device
-{
+- (instancetype) initWithDevice: (id<MTLDevice>) device {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         _mDevice = device;
         NSError* error = nil;
         id<MTLLibrary> defaultLibrary = [_mDevice newDefaultLibrary];
@@ -54,8 +51,7 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
 - (void) setX0: (float) initX0
          setXN: (float) initXN
          setY0: (float) initY0
-     setNumOfX:(unsigned long int) initNumX
-{
+     setNumOfX:(unsigned long int) initNumX {
     x0 = initX0;
     xN = initXN;
     yInit = initY0;
@@ -77,18 +73,15 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
                  _mBufferNumOfIteration);
 }
 
-- (void) setCoarseValues
-{
+- (void) setCoarseValues {
     generateCoarseValues(_mBufferCoarseYs, _mBufferXs);
 }
 
-- (void) updateCoarseValues
-{
+- (void) updateCoarseValues {
     correctCoarseGridValues(_mBufferCoarseYs, _mBufferYs, _mBufferXs);
 }
 
-void generateXs(id<MTLBuffer> bufferXs, id<MTLBuffer> bufferDT)
-{
+void generateXs(id<MTLBuffer> bufferXs, id<MTLBuffer> bufferDT) {
     float* dataPtr = bufferXs.contents;
     float h = (xN - x0) / (numOfXs - 1);
     
@@ -96,28 +89,22 @@ void generateXs(id<MTLBuffer> bufferXs, id<MTLBuffer> bufferDT)
     dataPtr[numOfXs - 1] = xN;
     
     for (unsigned long index = 1; index < numOfXs - 1; index++)
-    {
         dataPtr[index] = dataPtr[index - 1] + h;
-    }
     
     float* dt = bufferDT.contents;
     *dt = h;
 }
 
-void generateYs(id<MTLBuffer> buffer)
-{
+void generateYs(id<MTLBuffer> buffer) {
     float* dataPtr = buffer.contents;
     
     for (unsigned long index = 0; index < numOfXs; index++)
-    {
         dataPtr[index] = yInit;
-    }
 }
 
 void generateNums(id<MTLBuffer> bufferNumOfXs,
                   id<MTLBuffer> bufferNumOfGroups,
-                  id<MTLBuffer> bufferNumOfIteration)
-{
+                  id<MTLBuffer> bufferNumOfIteration) {
     long int* numXs = bufferNumOfXs.contents;
     *numXs = numOfXs;
     
@@ -128,13 +115,11 @@ void generateNums(id<MTLBuffer> bufferNumOfXs,
     *numIteration = 0;
 }
 
-float rungeKutta2 (float prevX, float prevY, float dT)
-{
+float rungeKutta2 (float prevX, float prevY, float dT) {
     return prevY + dT * f(prevX + dT / 2, prevY + dT / 2 * f(prevX, prevY));
 }
 
-void generateCoarseValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferXs)
-{
+void generateCoarseValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferXs) {
     float* coarseGridValues = bufferCoarse.contents;
     
     coarseGridValues[0] = yInit;
@@ -143,13 +128,13 @@ void generateCoarseValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferXs)
     float* xs = bufferXs.contents;
     
     for (int i = 1; i < numOfThreads + 1; i++)
-    {
-        coarseGridValues[i] = rungeKutta2(xs[(i - 1) * (numOfXs - 1) /  numOfThreads], coarseGridValues[i - 1], dT);
-    }
+        coarseGridValues[i] = rungeKutta2(xs[(i - 1) * (numOfXs - 1) /  numOfThreads],
+                                          coarseGridValues[i - 1], dT);
 }
 
-void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs, id<MTLBuffer> bufferXs)
-{
+void correctCoarseGridValues(id<MTLBuffer> bufferCoarse,
+                             id<MTLBuffer> bufferYs,
+                             id<MTLBuffer> bufferXs) {
     float* coarseGridValues = bufferCoarse.contents;
     float* ys = bufferYs.contents;
     float* xs = bufferXs.contents;
@@ -158,28 +143,23 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs,
     float* defect = (float*)malloc((numOfThreads + 1) * sizeof(float));
     
     for (int i = 0; i < numOfThreads + 1; i++)
-    {
         defect[i] = ys[i * (numOfXs - 1) /  numOfThreads] - coarseGridValues[i];
-    }
 
     coarseGridValues[0] = yInit;
 
     for (int i = 1; i < numOfThreads + 1; i++)
-    {
-        coarseGridValues[i] = rungeKutta2(xs[(i - 1) * (numOfXs - 1) /  numOfThreads], coarseGridValues[i - 1], dT) + defect[i - 1];
-    }
+        coarseGridValues[i] = rungeKutta2(xs[(i - 1) * (numOfXs - 1) /  numOfThreads],
+                                          coarseGridValues[i - 1], dT) + defect[i - 1];
     
     free (defect);
 }
 
-- (void) nextIteration
-{
+- (void) nextIteration {
     int* numIteration = _mBufferNumOfIteration.contents;
     *numIteration += 1;
 }
 
-- (void) sendComputeCommand
-{
+- (void) sendComputeCommand {
     id<MTLCommandBuffer> commandBuffer = [_mCommandQueue commandBuffer];
     assert(commandBuffer != nil);
     
@@ -194,7 +174,6 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs,
 }
 
 - (void)encodeSolveCommand:(id<MTLComputeCommandEncoder>)computeEncoder {
-    
     [computeEncoder setComputePipelineState:_mSolveFunctionPSO];
     [computeEncoder setBuffer:_mBufferXs offset:0 atIndex:0];
     [computeEncoder setBuffer:_mBufferYs offset:0 atIndex:1];
@@ -210,20 +189,17 @@ void correctCoarseGridValues(id<MTLBuffer> bufferCoarse, id<MTLBuffer> bufferYs,
               threadsPerThreadgroup: threadsPerThreadgroup];
 }
 
--(float*) getResult
-{
+-(float*) getResult {
     float* yCheck = _mBufferYs.contents;
     return yCheck;
 }
 
 @end
 
-float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
-{
+float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX) {
     float maxDifference = FLT_MIN;
     
-    for (int i = 0; i < numOfThreads + 1; i ++)
-    {
+    for (int i = 0; i < numOfThreads + 1; i ++) {
         float diff = fabsf(nextAnswer[i * (numOfXs - 1) /  numOfThreads] -
                         answer[i * (numOfXs - 1) /  numOfThreads]);
         
@@ -236,16 +212,16 @@ float getMaxDifference(float* answer, float* nextAnswer, unsigned long numX)
 
 
 float* pararealMethod(float x0, float xN, float y0,
-                      unsigned long numX, double* time)
-{
+                      unsigned long numX, double* time) {
     const float error = 0.0001;
+    
     numX ++;
     float* answer = (float*)malloc(numX * sizeof(int));
-    float prevDifference = FLT_MAX;
+    
     for (int i = 0; i < numX; i++)
-    {
         answer[i] = FLT_MAX;
-    }
+    
+    float prevDifference = FLT_MAX;
     
     id<MTLDevice> device = MTLCreateSystemDefaultDevice();
     
@@ -266,8 +242,7 @@ float* pararealMethod(float x0, float xN, float y0,
     sumTime += [start timeIntervalSinceNow];
     
     float difference = getMaxDifference(answer, nextAnswer, numX);
-    while (difference > error && difference <= prevDifference)
-    {
+    while (difference > error && difference <= prevDifference) {
         for (int i = 0; i < numX; i ++)
             answer[i] = nextAnswer[i];
         

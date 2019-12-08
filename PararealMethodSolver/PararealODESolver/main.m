@@ -2,8 +2,7 @@
 #import <Metal/Metal.h>
 #import "PararealSolver.h"
 
-int main()
-{
+int main() {
     const int numOfEquations = 1;
     const int x0 = 0;
     const int xN = 10;
@@ -12,6 +11,7 @@ int main()
     
     double parallelTime = 0;
     float* parallelAnswer = 0;
+    
     for (int i = 0; i < numOfEquations; i++)
         parallelAnswer = pararealMethod(x0, xN, y0, numX, &parallelTime);
     
