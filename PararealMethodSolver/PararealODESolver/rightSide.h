@@ -1,4 +1,4 @@
-float f(float x)
+float f(float x, float y)
 {
-    return 1 / x;
+    return 2 * x * y / (1 + x * x);
 }

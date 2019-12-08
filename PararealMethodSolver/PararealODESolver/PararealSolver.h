@@ -3,7 +3,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-float* pararealMethod(float, float, float, float, unsigned long, double*);
+float* pararealMethod(float, float, float, unsigned long, double*);
 
 @interface PararealSolver : NSObject
 - (instancetype) initWithDevice: (id<MTLDevice>) device;
