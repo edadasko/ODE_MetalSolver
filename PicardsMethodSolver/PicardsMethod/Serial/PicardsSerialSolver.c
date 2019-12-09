@@ -1,4 +1,4 @@
-#import "PicardsIterativeSolver.h"
+#import "PicardsSerialSolver.h"
 #import "rightSide.h"
 
 float getMaxDiff(float* answer, float* nextAnswer, unsigned long numX) {
@@ -25,7 +25,7 @@ float* picardsIteration(float* xs, float* ys, float y0, unsigned long numX) {
     return answer;
 }
 
-float* iterativePicardsMethod(float x0,
+float* serialPicardsMethod(float x0,
                               float xN,
                               float y0,
                               unsigned long numX,

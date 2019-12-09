@@ -5,4 +5,4 @@
 #include <limits.h>
 #include <time.h> 
 
-float* iterativePicardsMethod(float, float, float, unsigned long, double*);
+float* serialPicardsMethod(float, float, float, unsigned long, double*);
