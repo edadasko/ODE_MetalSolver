@@ -4,7 +4,7 @@
 #import "PicardsMethod/Iterative/PicardsIterativeSolver.h"
 
 int main() {
-    const int numOfEquations = 1;
+    const int numOfEquations = 50;
     const int x0 = 0;
     const int xN = 10;
     const int y0 = 1;

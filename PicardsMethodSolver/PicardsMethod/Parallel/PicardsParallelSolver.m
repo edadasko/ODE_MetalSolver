@@ -23,7 +23,8 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     
     id<MTLBuffer> _mBufferXs;
     id<MTLBuffer> _mBufferYs;
-    id<MTLBuffer> _mBufferSums;
+    id<MTLBuffer> _mBufferCurrentThreadSums;
+    id<MTLBuffer> _mBufferTotalSums;
     id<MTLBuffer> _mBufferPrevIntegrals;
     id<MTLBuffer> _mBufferNumOfThreads;
     id<MTLBuffer> _mBufferNumOfXs;
@@ -63,7 +64,8 @@ const unsigned int bufferNumOfIterationSize = sizeof(int);
     _mBufferXs = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
     _mBufferYs = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
     _mBufferPrevIntegrals = [_mDevice newBufferWithLength:bufferXsSize options:MTLResourceStorageModeShared];
-    _mBufferSums = [_mDevice newBufferWithLength:bufferGroupsSize options:MTLResourceStorageModeShared];
+    _mBufferCurrentThreadSums = [_mDevice newBufferWithLength:bufferGroupsSize options:MTLResourceStorageModeShared];
+    _mBufferTotalSums = [_mDevice newBufferWithLength:bufferGroupsSize options:MTLResourceStorageModeShared];
     _mBufferNumOfXs = [_mDevice newBufferWithLength:bufferNumOfXsSize options:MTLResourceStorageModeShared];
     _mBufferNumOfThreads = [_mDevice newBufferWithLength:bufferNumOfGroupsSize options:MTLResourceStorageModeShared];
     _mBufferNumOfIteration = [_mDevice newBufferWithLength:bufferNumOfIterationSize options:MTLResourceStorageModeShared];
@@ -119,15 +121,16 @@ void generateNums(id<MTLBuffer> bufferNumOfXs, id<MTLBuffer> bufferNumOfGroups,
     [commandBuffer waitUntilCompleted];
 }
 
-- (void)encodeSolveCommand:(id<MTLComputeCommandEncoder>)computeEncoder {
+- (void) encodeSolveCommand:(id<MTLComputeCommandEncoder>)computeEncoder {
     [computeEncoder setComputePipelineState:_mSolveFunctionPSO];
     [computeEncoder setBuffer:_mBufferXs offset:0 atIndex:0];
     [computeEncoder setBuffer:_mBufferYs offset:0 atIndex:1];
-    [computeEncoder setBuffer:_mBufferSums offset:0 atIndex:2];
-    [computeEncoder setBuffer:_mBufferPrevIntegrals offset:0 atIndex:3];
-    [computeEncoder setBuffer:_mBufferNumOfIteration offset:0 atIndex:4];
-    [computeEncoder setBuffer:_mBufferNumOfXs offset:0 atIndex:5];
-    [computeEncoder setBuffer:_mBufferNumOfThreads offset:0 atIndex:6];
+    [computeEncoder setBuffer:_mBufferCurrentThreadSums offset:0 atIndex:2];
+    [computeEncoder setBuffer:_mBufferTotalSums offset:0 atIndex:3];
+    [computeEncoder setBuffer:_mBufferPrevIntegrals offset:0 atIndex:4];
+    [computeEncoder setBuffer:_mBufferNumOfIteration offset:0 atIndex:5];
+    [computeEncoder setBuffer:_mBufferNumOfXs offset:0 atIndex:6];
+    [computeEncoder setBuffer:_mBufferNumOfThreads offset:0 atIndex:7];
     
     MTLSize threadsPerThreadgroup = MTLSizeMake(numOfThreadsPerThreadgroup, 1, 1);
     MTLSize threadsPerGrid = MTLSizeMake(numOfThreads, 1, 1);
@@ -138,6 +141,25 @@ void generateNums(id<MTLBuffer> bufferNumOfXs, id<MTLBuffer> bufferNumOfGroups,
 -(float*) getResult {
     float* yCheck = _mBufferYs.contents;
     return yCheck;
+}
+
+- (void) setTotalSums {
+    setTotalSums(_mBufferTotalSums, _mBufferCurrentThreadSums);
+}
+
+void setTotalSums(id<MTLBuffer> totalSums, id<MTLBuffer> currentSums) {
+    float* tSums = totalSums.contents;
+    float* cSums = currentSums.contents;
+    
+    for (uint i = 0 ; i < numOfThreads; i++) {
+        tSums[i] = 0;
+    }
+    
+    for (uint i = 0; i < numOfThreads; i++) {
+        for (uint j = i + 1; j < numOfThreads; j++) {
+            tSums[j] += cSums[i];
+        }
+    }
 }
 
 @end
@@ -184,6 +206,7 @@ float* parallelPicardsMethod(float x0, float xN, float y0, unsigned long numX, d
         NSDate *start = [NSDate date];
         
         [solver nextIteration];
+        [solver setTotalSums];
         [solver sendComputeCommand];
         nextAnswer = [solver getResult];
         

@@ -9,7 +9,7 @@ float findIntegral(int i, device const float* x, device float* y) {
 
 void setSums(device const float* x,
              device float* y,
-             device float* sums,
+             device float* currentThreadSums,
              device const int* numOfX,
              device const int* numOfThreads,
              device float* prevIntegrals,
@@ -22,19 +22,13 @@ void setSums(device const float* x,
         sum += prevIntegrals[i];
     }
     
-    sums[numOfCurrentThread] = sum;
-}
-
-float getSums(device float* sums, uint numOfCurrentThread) {
-    float sum = 0;
-    for (uint i = 0; i < numOfCurrentThread; i ++)
-        sum += sums[i];
-    return sum;
+    currentThreadSums[numOfCurrentThread] = sum;
 }
 
 kernel void solveODE(device const float* x,
                      device float* y,
-                     device float* sums,
+                     device float* currentThreadSums,
+                     device float* totalSums,
                      device float* prevIntegrals,
                      device const int* numOfIteration,
                      device const int* numOfX,
@@ -42,7 +36,7 @@ kernel void solveODE(device const float* x,
                      uint numOfCurrentThread [[thread_position_in_grid]]) {
     
     if(*numOfIteration != 0) {
-        float sum = getSums(sums, numOfCurrentThread);
+        float sum = totalSums[numOfCurrentThread];
         y[numOfCurrentThread * *numOfX / *numOfThreads] = y[0] + sum;
         
         for (uint i = numOfCurrentThread * *numOfX / *numOfThreads + 1;
@@ -50,5 +44,5 @@ kernel void solveODE(device const float* x,
             y[i] = y[i - 1] + prevIntegrals[i - 1];
     }
     
-    setSums(x, y, sums, numOfX, numOfThreads, prevIntegrals, numOfCurrentThread);
+    setSums(x, y, currentThreadSums, numOfX, numOfThreads, prevIntegrals, numOfCurrentThread);
 }
