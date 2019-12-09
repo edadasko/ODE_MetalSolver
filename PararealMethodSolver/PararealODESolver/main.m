@@ -3,11 +3,11 @@
 #import "PararealSolver.h"
 
 int main() {
-    const int numOfEquations = 1;
+    const int numOfEquations = 50;
     const int x0 = 0;
-    const int xN = 100;
+    const int xN = 10;
     const int y0 = 1;
-    const int numX =  1024 * 16;
+    const int numX =  1024 * 1024;
     
     double parallelTime = 0;
     float* parallelAnswer = 0;
