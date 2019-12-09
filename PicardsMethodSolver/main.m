@@ -4,11 +4,11 @@
 #import "PicardsMethod/Iterative/PicardsIterativeSolver.h"
 
 int main() {
-    const int numOfEquations = 50;
+    const int numOfEquations = 1;
     const int x0 = 0;
-    const int xN = 10;
+    const int xN = 100;
     const int y0 = 1;
-    const int numX =  1024 * 1024;
+    const int numX =  1024 * 16;
     
     double parallelTime = 0;
     float* parallelAnswer = 0;
@@ -25,6 +25,11 @@ int main() {
     
     printf("Iterative time: %f \n", iterativeTime);
     printf("y[xN] = %f\n", iterativeAnswer[numX - 1]);
+    
+    FILE * f = fopen("/Users/edadasko/Desktop/picards.txt ", "w");
+    for (int i=0; i < numX; i++)
+        fprintf(f, "%f, ", parallelAnswer[i]);
+    fclose(f);
     
     return 0;
 }

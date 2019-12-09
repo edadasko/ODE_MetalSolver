@@ -7,7 +7,7 @@ float yInit;
 
 unsigned long numOfXs;
 unsigned long bufferXsSize;
-const unsigned long numOfThreads = 512;
+const unsigned long numOfThreads = 1024;
 const unsigned long numOfThreadsPerThreadgroup = 32;
 const unsigned int bufferGroupsSize = numOfThreads * sizeof(float);
 const unsigned int bufferNumOfXsSize = sizeof(long int);
