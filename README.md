@@ -12,7 +12,7 @@
 
 Распараллеливание будет проведено с использованием графического процессора (GPU), так как он имеет значительное преимущество перед CPU при параллельной обработке большого набора информации.
 
-В качестве программного обеспечения будет использован фреймворк Metal, как современный инструмент для папаллельных вычислений для платформ Apple.
+В качестве программного обеспечения будет использован фреймворк Metal, как современный инструмент для параллельных вычислений для платформ Apple.
 
 Использованные аппаратные средства:
 
@@ -51,7 +51,7 @@ GPU - Intel Iris Graphics 6100 1536 MB
 
 ### 1.2. Параллельный алгоритм
 
-Область поиска решенния <img src="/tex/912026ed585bf974d2e4fbf668aa6352.svg?invert_in_darkmode&sanitize=true" align=middle width=50.27633489999999pt height=24.65753399999998pt/> разобьем на непересекающиеся подобласти <img src="/tex/66aad7021c319800c1d6ad99b215f85e.svg?invert_in_darkmode&sanitize=true" align=middle width=62.58398189999999pt height=24.65753399999998pt/> (<img src="/tex/07617f9d8fe48b4a7b3f523d6730eef0.svg?invert_in_darkmode&sanitize=true" align=middle width=9.90492359999999pt height=14.15524440000002pt/> = 0,...,p+1) количество которых совпадает с количеством потоков p. На каждом интервале приближенное решение расчитывается в M/p узлах.
+Область поиска решения <img src="/tex/912026ed585bf974d2e4fbf668aa6352.svg?invert_in_darkmode&sanitize=true" align=middle width=50.27633489999999pt height=24.65753399999998pt/> разобьем на непересекающиеся подобласти <img src="/tex/66aad7021c319800c1d6ad99b215f85e.svg?invert_in_darkmode&sanitize=true" align=middle width=62.58398189999999pt height=24.65753399999998pt/> (<img src="/tex/07617f9d8fe48b4a7b3f523d6730eef0.svg?invert_in_darkmode&sanitize=true" align=middle width=9.90492359999999pt height=14.15524440000002pt/> = 0,...,p+1) количество которых совпадает с количеством потоков p. На каждом интервале приближенное решение расчитывается в M/p узлах.
 
 На каждой k-й итерации <img src="/tex/07617f9d8fe48b4a7b3f523d6730eef0.svg?invert_in_darkmode&sanitize=true" align=middle width=9.90492359999999pt height=14.15524440000002pt/>-й поток выполняет следующие действия:
 1. Одновременно с другими потоками вычисляет значения определенных интегралов <img src="/tex/8d8e51f86b353fd306e5f8f54c272a17.svg?invert_in_darkmode&sanitize=true" align=middle width=56.107410149999986pt height=34.337843099999986pt/>, l = 0,...,M/p-1 своей подобласти по квадратурной формуле. 
@@ -132,7 +132,7 @@ Parareal - параллельный алгоритм численного ана
 
 ## Использованные источники:
 
-1. [Официальная докуметация по Metal](https://developer.apple.com/documentation/metal)
+1. [Официальная документация по Metal](https://developer.apple.com/documentation/metal)
 2. [Примеры программ с использованием Metal](https://developer.apple.com/metal/sample-code/)
 3. [Методы параллельных вычислений (А. В. Старченко, В. Н. Берцун)](http://math.tsu.ru/sites/default/files/mmf2/e-resources/parallel_comp_meth.pdf)
 4. [Parareal Methods (Scott Field)](http://www.cfm.brown.edu/people/jansh/page5/page10/page40/assets/Field_Talk.pdf)
